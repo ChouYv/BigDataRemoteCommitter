@@ -2,7 +2,9 @@ package com.me.remotecommitter.contollrer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.me.remotecommitter.bean.SubmitEvent;
+import com.me.remotecommitter.service.SubmitterService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,11 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author zs
  *@date 2021/8/5.
-
  */
-@Slf4j
 @RestController
+@Slf4j
 public class SparkController {
+    @Autowired
+    SubmitterService submitterService;
+
     @GetMapping("/hello")
     public String Hello() {
         return "Hello";
@@ -46,8 +50,8 @@ public class SparkController {
 //    }
 
     @PostMapping("/spark-submit")
-    public SubmitEvent reveSparkJar(@RequestBody SubmitEvent submitEvent) {
-        log.info(submitEvent.toString());
-        return submitEvent;
+    public String reveSparkJar(@RequestBody SubmitEvent submitEvent) throws Exception {
+        this.submitterService.submitAppJar(submitEvent);
+        return "submit success";
     }
 }

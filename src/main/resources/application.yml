@@ -1,2 +1,7 @@
 server:
   port: 8266
+
+callback:
+  type: http
+  http:
+    url: http://gmall.goho.co/callback/task-status
