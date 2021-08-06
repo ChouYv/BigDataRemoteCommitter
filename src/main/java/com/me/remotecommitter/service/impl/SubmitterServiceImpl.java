@@ -68,15 +68,16 @@ public class SubmitterServiceImpl implements SubmitterService {
         launcher.addAppArgs(submitEvent.getAppArgs().toArray(new String[0]));
         log.info("参数设置完成，开始提交spark任务");
 
-        SparkAppHandle handle = launcher.setVerbose(true).startApplication(new Listener[]{new Listener() {
+
+        // TODO 出现问题，SPARK_HOME 有问题
+        launcher.setVerbose(true).startApplication(new Listener[]{new Listener() {
             @Override
             public void stateChanged(SparkAppHandle sparkAppHandle) {
                 if (SubmitterServiceImpl.this.callBackType.equals("http")) {
-                    SubmitterServiceImpl.log.info("stateChanged2:{}", sparkAppHandle.getState().toString());
+                    SubmitterServiceImpl.log.info("stateChanged:{}", sparkAppHandle.getState().toString());
                     SubmitterServiceImpl.this.callbackStatus(submitEvent, sparkAppHandle);
                 }
             }
-
             @Override
             public void infoChanged(SparkAppHandle sparkAppHandle) {
                 SubmitterServiceImpl.log.info("infoChanged:{}", sparkAppHandle.getState().toString());
@@ -87,7 +88,7 @@ public class SubmitterServiceImpl implements SubmitterService {
 
 
     public void callbackStatus(SubmitEvent submitEvent, SparkAppHandle sparkAppHandle) {
-        TaskStatusInfo taskStatusInfo = new TaskStatusInfo(submitEvent.getTaskProcessId(), submitEvent.getTaskId(), sparkAppHandle.getAppId(), (String) null);
+        TaskStatusInfo taskStatusInfo = new TaskStatusInfo(submitEvent.getTaskProcessId(), submitEvent.getTaskId(), sparkAppHandle.getAppId(), null);
         if (sparkAppHandle.getState().equals(State.SUBMITTED)) {
             taskStatusInfo.setTaskExecStatus("SUBMITTED");
         } else if (sparkAppHandle.getState().equals(State.RUNNING)) {

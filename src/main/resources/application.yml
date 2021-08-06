@@ -4,4 +4,4 @@ server:
 callback:
   type: http
   http:
-    url: http://gmall.goho.co/callback/task-status
+    url: http://localhost/callback/task-status
